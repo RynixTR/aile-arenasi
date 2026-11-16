@@ -9,7 +9,7 @@ import {fileURLToPath} from 'node:url';
 import {PrismaClient} from '@prisma/client';
 import {Server} from 'socket.io';
 import {z} from 'zod';
-import {Engine} from './engine.js';
+import {Engine,GAMES} from './engine.js';
 
 const app=express(),http=createServer(app),db=new PrismaClient();
 if(process.env.NODE_ENV==='production'&&(!process.env.SESSION_SECRET||process.env.SESSION_SECRET.length<24))throw Error('SESSION_SECRET en az 24 karakter olmalı.');
@@ -31,7 +31,7 @@ io.on('connection',socket=>{const r=engine.get(socket.data.room);if(!r)return so
  let eventWindow=Date.now(),eventCount=0;socket.use((_packet,next)=>{if(Date.now()-eventWindow>10000){eventWindow=Date.now();eventCount=0;}eventCount++;if(eventCount>200)return next(new Error('Çok fazla işlem yapıldı.'));next();});
  const guarded=(schema:z.ZodTypeAny,fn:(data:any)=>Promise<any>)=>(data:any,ack:any)=>{try{if(!r.players.some(x=>x.id===p.id))throw Error('Oyuncu artık odada değil.');const parsed=schema.parse(data);fn(parsed).then(value=>reply(ack,{ok:true,...value})).catch(e=>reply(ack,fail(e)));}catch(e){reply(ack,fail(e));}};
  socket.on('room:ready',guarded(z.object({ready:z.boolean()}),async d=>{await engine.ready(r,p,d.ready);return {};}));
- socket.on('room:start',guarded(z.object({random:z.boolean()}),async d=>{await engine.start(r,p,d.random);return {};}));
+ socket.on('room:start',guarded(z.object({game:z.enum(GAMES)}),async d=>{await engine.start(r,p,d.game);return {};}));
  socket.on('room:leave',(data:any,ack:any)=>{try{z.object({}).parse(data);engine.leave(r,p).then(()=>{reply(ack,{ok:true});io.in(`player:${p.id}`).disconnectSockets(true);}).catch(e=>reply(ack,fail(e)));}catch(e){reply(ack,fail(e));}});
  socket.on('game:answer',guarded(z.object({value:z.string().max(120)}),async d=>{await engine.answer(r,p,d.value);return {};}));
  socket.on('game:action',guarded(z.object({kind:z.string().max(20),data:z.unknown()}),async d=>{await engine.action(r,p,d.kind,d.data);return {};}));

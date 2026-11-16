@@ -4,7 +4,7 @@ Türkçe, mobil öncelikli, 2–5 kişilik gerçek zamanlı aile oyun platformu.
 
 ## Oyunlar
 
-Bilgi Arenası, Aramızdaki Casus, Çiz Bakalım, Sessiz Sinema, Kelime Savaşı, Ailede Kim?, Hafıza Savaşı, Fiyatı Bil, Yasaklı Kelime ve Şans Çarkı. İki kişilik maçlarda en az üç kişi gerektiren Casus oyunu atlanır; diğer dokuz oyun oynanır. Üç ila beş kişiyle on oyunun tamamı oynanır.
+Bilgi Arenası, Aramızdaki Casus, Çiz Bakalım, Sessiz Sinema, Kelime Savaşı, Ailede Kim?, Hafıza Savaşı, Fiyatı Bil, Yasaklı Kelime ve Şans Çarkı. Oda sahibi bekleme odasında istediği oyunu seçer. Oyun bitince **Yeni oyun seç** düğmesiyle odaya dönülür; toplam puanlar korunur. Casus oyunu en az üç oyuncu gerektirir; diğer oyunlar en az iki oyuncuyla başlar.
 
 ## Yerel çalıştırma
 
